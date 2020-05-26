@@ -1,0 +1,26 @@
+.container-sm {
+  padding: 20px;
+
+  .list-group-item {
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    margin: 5px 0;
+    span {
+      margin: 0 10px;
+    }
+  }
+
+  .modal-dialog {
+    top: 0;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
+
+virtual-scroller {
+  width: auto;
+  height: 100vh;
+}

@@ -1,0 +1,58 @@
+<div class="container-sm">
+  <button type="button" class="btn btn-primary btn-lg btn-block p-10" (click)="addtask()" [disabled]="loading">
+    <span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" *ngIf="loading"></span>
+    {{ loading ? 'Пожалуйста, подождите' : 'Добавить' }}
+  </button>
+  <virtual-scroller #scroll [items]="todos">
+    <ul class="list-group" *ngFor="let todo of scroll.viewPortItems">
+      <li class="list-group-item list-group-item-action"
+        [ngClass]="{'list-group-item-light': !todo.completed, 'list-group-item-success': todo.completed}"
+        (click)="openTask(todo)"
+        data-toggle="modal" data-target="#exampleModal">
+        <span>{{ todo.title }}</span>
+        <div class="actions-wrapper">
+          <button type="button"
+          class="btn"
+          [ngClass]="{'btn-success': !todo.completed, 'btn-light': todo.completed}"
+            (click)="makeTask($event, todo)"
+            [disabled]="loading">{{ todo.completed ? 'Отклонить' : 'Выполнить' }}</button>
+          <button type="button" class="btn btn-danger" (click)="removeTask($event, todo)"
+            [disabled]="loading">Удалить</button>
+        </div>
+      </li>
+    </ul>
+  </virtual-scroller>
+
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" id="exampleModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalLabel" aria-hidden="true"
+    *ngIf="showModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{ getModalTitle(modalState) }}</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div [ngSwitch]="modalState">
+            <div *ngSwitchCase="'removing'">Вы действительно хотите удалить {{ editedTaskName }}</div>
+            <div *ngSwitchDefault>
+              <label for="input-field">{{ modalState === 'editing' ? 'Отредактируйте' : 'Введите' }} название</label>
+              <div class="input-group input-group-sm mb-3">
+                <input type="text" class="form-control" aria-label="Sizing example input"
+                  aria-describedby="inputGroup-sizing-sm" [(ngModel)]="title"
+                  id="input-field">
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal"
+            (click)="closeModal()">Закрыть</button>
+          <button type="button" class="btn btn-primary"
+            (click)="actionTask()">{{ modalState === 'removing' ? 'Удалить' : 'Сохранить изменения' }}</button>
+        </div>
+      </div>
+    </div>
+  </div>
